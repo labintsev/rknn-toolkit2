@@ -5,7 +5,7 @@ The following <TARGET_PLATFORM> represents RK3566_RK3568, RK3562, RK3576, RK3588
 First export `GCC_COMPILER`, for example `export GCC_COMPILER=~/opt/gcc-linaro-7.5.0-2019.12-x86_64_aarch64-linux-gnu/bin/aarch64-linux-gnu`, then execute:
 
 ```
-./build-linux.sh -t <target> -a <arch> -b <build_type>]
+./build-linux.sh -t <target> -a <arch> -b <build_type>
 
 # such as: 
 ./build-linux.sh -t rk3588 -a aarch64 -b Release
@@ -24,6 +24,9 @@ adb push install/rknn_api_demo_Linux /userdata/
 ```
 
 - If your board has sshd service, you can use scp or other methods to copy the program and rknn model to the board.
+``` 
+scp -r install/rknn_api_demo_Linux/ orangepi@192.168.0.201:~/userdata/
+```
 
 ## Run
 

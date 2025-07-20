@@ -33,8 +33,16 @@ def build_onnx_model():
     model_state = torch.load(TORCH_MODEL)
     model.load_state_dict(model_state)
     model.eval()
-    onnx_program = torch.onnx.export(model, example_inputs, dynamo=True, opset_version=17)
-    onnx_program.save(ONNX_MODEL)
+    onnx_program = torch.onnx.export(
+        model=model, 
+        args=example_inputs, 
+        f=ONNX_MODEL,
+        # dynamo=True, 
+        opset_version=17
+        )
+
+    if onnx_program: 
+        onnx_program.save(ONNX_MODEL)
 
 
 if __name__ == '__main__':

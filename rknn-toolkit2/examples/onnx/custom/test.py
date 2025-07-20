@@ -9,10 +9,18 @@ class OneLayerModel(nn.Module):
         super(OneLayerModel, self).__init__()
         self.flatten = nn.Flatten()
         self.layer = nn.Linear(3072, 10)
+        self.layer_0 = nn.Linear(3072, 100)
+        self.relu = nn.ReLU()
+        self.layer_1 = nn.Linear(100, 10)
 
     def forward(self, x):
         x = self.flatten(x)
-        x = self.layer(x)
+        if torch.rand(1) > 0.5:
+            x = self.layer(x)
+        else:
+            x = self.layer_0(x)
+            x = self.relu(x)
+            x = self.layer_1(x)
         return x
 
 MODEL_NAME = OneLayerModel.__name__
@@ -33,8 +41,14 @@ def build_onnx_model():
     model_state = torch.load(TORCH_MODEL)
     model.load_state_dict(model_state)
     model.eval()
-    onnx_program = torch.onnx.export(model, example_inputs, dynamo=True, opset_version=17)
-    onnx_program.save(ONNX_MODEL)
+    onnx_program = torch.onnx.export(model=model, 
+                                     args=example_inputs, 
+                                     f=ONNX_MODEL,
+                                    #  dynamo=True, 
+                                     opset_version=17
+                                     )
+    if onnx_program:
+        onnx_program.save(ONNX_MODEL)
 
 
 if __name__ == '__main__':

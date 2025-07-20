@@ -42,12 +42,13 @@ def build_onnx_model():
     model.load_state_dict(model_state)
     model.eval()
     onnx_program = torch.onnx.export(model=model, 
-                                     args=example_inputs, 
+                                     args=(example_inputs), 
                                      f=ONNX_MODEL,
-                                    #  dynamo=True, 
+                                     dynamo=True, 
                                      opset_version=17
                                      )
     if onnx_program:
+        onnx_program.optimize()
         onnx_program.save(ONNX_MODEL)
 
 
